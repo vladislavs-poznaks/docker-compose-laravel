@@ -28,12 +28,13 @@ services:
     tty: true
     ports:
       - 3306:3306
-    MYSQL_DATABASE: ${DB_DATABASE}
-    MYSQL_USER: ${DB_USERNAME}
-    MYSQL_PASSWORD: ${DB_PASSWORD}
-    MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-    SERVICE_TAGS: dev
-    SERVICE_NAME: mysql
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
     volumes:
       - /var/lib/mysql:/var/lib/mysql
     networks:
