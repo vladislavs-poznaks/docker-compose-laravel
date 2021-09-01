@@ -7,7 +7,7 @@ services:
   site:
     build:
       context: .
-      dockerfile: nginx.dockerfile
+      dockerfile: .docker/nginx.dockerfile
     container_name: nginx
     ports:
       - 80:80
@@ -29,22 +29,24 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_DATABASE: homestead
-      MYSQL_USER: homestead
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
     networks:
       - laravel
 
   php:
     build:
       context: .
-      dockerfile: php.dockerfile
+      dockerfile: .docker/php.dockerfile
     container_name: php
     volumes:
-      - ./src:/var/www/html:delegated
+      - ./:/var/www/html:delegated
     networks:
       - laravel
 
@@ -60,10 +62,10 @@ services:
   composer:
     build:
       context: .
-      dockerfile: composer.dockerfile
+      dockerfile: .docker/composer.dockerfile
     container_name: composer
     volumes:
-      - ./src:/var/www/html
+      - ./:/var/www/html
     working_dir: /var/www/html
     depends_on:
       - php
@@ -76,7 +78,7 @@ services:
     image: node:13.7
     container_name: npm
     volumes:
-      - ./src:/var/www/html
+      - ./:/var/www/html
     ports:
       - 3000:3000
       - 3001:3001
@@ -88,10 +90,10 @@ services:
   artisan:
     build:
       context: .
-      dockerfile: php.dockerfile
+      dockerfile: .docker/php.dockerfile
     container_name: artisan
     volumes:
-      - ./src:/var/www/html:delegated
+      - ./:/var/www/html:delegated
     depends_on:
       - mysql
     working_dir: /var/www/html
